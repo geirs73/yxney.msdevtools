@@ -7,7 +7,7 @@ namespace DllTreeCmd
 {
     internal class Program
     {
-        // this program uses dragonfruit magic, because convenience
+        // this program uses DragonFruit magic, because convenience
 
         public enum OutputFormat
         {
@@ -18,9 +18,9 @@ namespace DllTreeCmd
 
         /// <param name="path">Path to folder</param>
         /// <param name="pattern">File pattern to match</param>
-        /// <param name="excludeDirs">Semi-colon separated list of names to exclude</param>
+        /// <param name="exclude">Semi-colon separated list of strings to exclude</param>
         /// <param name="format">Output format, only CSV for now</param>
-        public static void Main(string path = ".", string pattern = "*.*", string excludeDirs = "obj", OutputFormat format = OutputFormat.Csv)
+        public static void Main(string path = ".", string pattern = "*.*", string exclude = "obj", OutputFormat format = OutputFormat.Csv)
         {
             switch (format)
             {
@@ -31,7 +31,7 @@ namespace DllTreeCmd
             var dir = new DirectoryInfo(path);
             var files = dir.GetFiles(pattern, SearchOption.AllDirectories);
 
-            var exclusions = (from d in excludeDirs.Split(';') select d.ToUpperInvariant()).ToList();
+            var exclusions = (from d in exclude.Split(';') select d.ToUpperInvariant()).ToList();
             var filtered1 = (from f in files where !exclusions.Any(f.FullName.ToUpperInvariant().Contains) select f).ToList();
 
             Console.Out.WriteLine("sep=;");
