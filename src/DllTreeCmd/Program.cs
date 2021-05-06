@@ -39,7 +39,8 @@ namespace DllTreeCmd
             foreach (FileInfo f in filtered1)
             {
                 var version = FileVersionInfo.GetVersionInfo(f.FullName);
-                Console.Out.WriteLine($"{f};{version.FileVersion};{f.LastAccessTime:O}");
+                var formattedTime = f.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss");
+                Console.Out.WriteLine($"{f};{version.FileVersion};{formattedTime}");
             }
         }
     }
