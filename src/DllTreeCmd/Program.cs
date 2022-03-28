@@ -35,12 +35,12 @@ namespace DllTreeCmd
             var filtered1 = (from f in files where !exclusions.Any(f.FullName.ToUpperInvariant().Contains) select f).ToList();
 
             Console.Out.WriteLine("sep=;");
-            Console.Out.WriteLine($"Path;Version;LastWrittenTime");
+            Console.Out.WriteLine($"Path;ProductVersion;FileVersion;LastWrittenTime");
             foreach (FileInfo f in filtered1)
             {
                 var version = FileVersionInfo.GetVersionInfo(f.FullName);
                 var formattedTime = f.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss");
-                Console.Out.WriteLine($"{f};{version.FileVersion};{formattedTime}");
+                Console.Out.WriteLine($"{f};{version.ProductVersion};{version.FileVersion};{formattedTime}");
             }
         }
     }
