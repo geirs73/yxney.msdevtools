@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <UsingTask TaskName="TransformXml"
+             AssemblyFile=".\BuildTasks\Microsoft.Web.Publishing.Tasks.dll"/>
+
+  <Target Name="TransformConfiguration" AfterTargets="BeforeBuild" >
+    <MakeDir Directories="Config" Condition="!(Exists('Config'))" />
+    <Message Text="Transforming web.config" Importance="High" />
+    <TransformXml Source="Web.config"
+                  Transform="Web.Alternate.Transform.config"
+                  Destination="Config\Web.Alternate.config"
+                  StackTrace="true" />
+    <ItemGroup>
+      <Content Include="Config\*.config" />
+    </ItemGroup>
+    <!-- Remember to put resulting configs in .gitignore-->
+  </Target>
+
+</Project>
