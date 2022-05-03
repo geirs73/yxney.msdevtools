@@ -9,19 +9,27 @@
   </ItemGroup>
 
   <UsingTask TaskName="TransformXml"
-             AssemblyFile=".\BuildTasks\Microsoft.Web.Publishing.Tasks.dll"/>
+    AssemblyFile=".\BuildTasks\Microsoft.Web.Publishing.Tasks.dll" />
 
-  <Target Name="TransformConfiguration" AfterTargets="BeforeBuild" >
+  <Target Name="TransformConfiguration" AfterTargets="BeforeBuild">
     <MakeDir Directories="Config" Condition="!(Exists('Config'))" />
     <Message Text="Transforming web.config" Importance="High" />
     <TransformXml Source="Web.config"
-                  Transform="Web.Alternate.Transform.config"
-                  Destination="Config\Web.Alternate.config"
-                  StackTrace="true" />
+      Transform="Web.Alternate.Transform.config"
+      Destination="Config\Web.Alternate.config"
+      StackTrace="true" />
     <ItemGroup>
       <Content Include="Config\*.config" />
     </ItemGroup>
     <!-- Remember to put resulting configs in .gitignore-->
+  </Target>
+
+  <Target Name="Cleanup" AfterTargets="AfterClean">
+    <Message Text="Cleaning up" />
+    <ItemGroup>
+      <FileToDelete Include="Config\*.config" />
+    </ItemGroup>
+    <Delete Files="@(FileToDelete)" />
   </Target>
 
 </Project>
