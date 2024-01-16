@@ -2,18 +2,19 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RunTimeIdentifier>win-x64</RunTimeIdentifier>
     <RootNamespace>DllTreeCmd</RootNamespace>
-    <PublishTrimmed>true</PublishTrimmed>
+    <PublishTrimmed>false</PublishTrimmed>
     <PublishReadyToRun>true</PublishReadyToRun>
     <PublishSingleFile>true</PublishSingleFile>
     <PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Commandline" Version="2.0.0-beta1.20574.7" />
-    <PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.20574.7" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
+    <PackageReference Include="System.CommandLine.DragonFruit" Version="0.4.0-alpha.22114.1" />
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="6.0.0" />
   </ItemGroup>
 
 </Project>

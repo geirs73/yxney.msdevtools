@@ -2,6 +2,7 @@
 using System.IO;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 
 namespace DllTreeCmd
 {
@@ -33,14 +34,27 @@ namespace DllTreeCmd
 
             var exclusions = (from d in exclude.Split(';') select d.ToUpperInvariant()).ToList();
             var filtered1 = (from f in files where !exclusions.Any(f.FullName.ToUpperInvariant().Contains) select f).ToList();
+            var filtered2 = (from f in filtered1
+                             where (f.Extension == ".exe" || f.Extension == ".dll")
+                             select f).ToList();
+            var filesStringArray = from f in filtered2 select f.FullName;
+            var resolver = new PathAssemblyResolver(filesStringArray);
 
             Console.Out.WriteLine("sep=;");
-            Console.Out.WriteLine($"Path;Version;LastWrittenTime");
-            foreach (FileInfo f in filtered1)
+            Console.Out.WriteLine($"Path;ProductVersion;FileVersion;LastWrittenTime");
+            using (var metaDataContext = new MetadataLoadContext(resolver))
             {
-                var version = FileVersionInfo.GetVersionInfo(f.FullName);
-                var formattedTime = f.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss");
-                Console.Out.WriteLine($"{f};{version.FileVersion};{formattedTime}");
+                foreach (FileInfo f in filtered2)
+                {
+                    Assembly assembly = metaDataContext.LoadFromAssemblyPath(f.FullName);
+                    Version version = Assembly.GetEntryAssembly().GetName().Version;
+                    var versionString = version.ToString(4);
+                    var fileVersion = FileVersionInfo.GetVersionInfo(f.FullName);
+
+                    var formattedTime = f.LastWriteTime.ToString("yyyy-MM-dd HH:mm:ss");
+                    Console.Out.WriteLine($"{f.DirectoryName};{f.Name};{versionString};{fileVersion.ProductVersion};{fileVersion.FileVersion};{formattedTime}");
+                }
+
             }
         }
     }
